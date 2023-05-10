@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
+from functions import get_wiki
 
 # count down function
 def start_countdown():
@@ -46,13 +47,29 @@ button_start = Button(text="Start",
                       )
 button_start.grid(column=1, row=1)
 
-# Show text to type
-label_title = Label(text="Text you will type", font=("Arial", 10))
-label_title.grid(column=0, row=2)
-# my_label.config(text="Label") #When you would like to change label title
+# Show text for typing
+label_TextTypeTitle = Label(text="Text you will type", font=("Arial", 10))
+label_TextTypeTitle.grid(column=0, row=2)
+
+# Get word for typing test. This is to get from Wikipedia
+text_to_type = get_wiki("Japan airlines")
+
+#TODO show text with scroll bar
+label_TextType = Label(text=text_to_type, font=("Arial", 20),
+                       # width=40,
+                       justify=LEFT,
+                       wraplength=500,
+
+                       bg="white")
+label_TextType.grid(column=0, row=2)
 
 
-# TODO get word to type (from web or local file)
+
+
+
+
+
+
 # TODO set timer and forced to stop type
 # TODO count typed words
 # TODO check typed words
