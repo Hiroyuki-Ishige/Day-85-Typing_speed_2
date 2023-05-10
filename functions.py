@@ -8,9 +8,10 @@ responce.raise_for_status()
 data = responce.json()
 print(data)
 
-'''
+# Wikipedia API
+https://pypi.org/project/Wikipedia-API/
 
-#TODO https://pypi.org/project/Wikipedia-API/
+'''
 
 def get_wiki(words_serch):
     wiki_wiki = wikipediaapi.Wikipedia(
