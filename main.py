@@ -12,7 +12,7 @@ def start_countdown():
 def countdown(count):
     label_time.config(text=count)
     if count > 0:
-        window.after(1000, countdown, count - 1)
+        root.after(1000, countdown, count - 1)
 
 
 # ----------------------------- UI SETUP ----------------------------------#
@@ -20,12 +20,18 @@ def countdown(count):
 WIDTH = 640
 HEIGHT = 400 * 2
 
-# Set main window
-window = Tk()
-window.title("Typing speed challenge")
-window.minsize(width=WIDTH, height=HEIGHT)
-window.config(padx=20, pady=20)  # padding for window
+# Set main window --------------------------------------------------------#
+root = Tk()
+root.title("Typing speed challenge")
+# root.minsize(width=WIDTH, height=HEIGHT)
+# root.config(padx=20, pady=20)  # padding for window
+root.grid_rowconfigure(0, weight=1)
+root.columnconfigure(0,weight=1)
 
+frame_main = tkinter.Frame(root, bg="gray")
+frame_main.grid(sticky='news')
+
+# Set parts -------------------------------------------------------------#
 # Input name
 label_name = Label(text="Fill in your name", font=("Arial", 10))
 label_name.grid(column=0, row=0)
@@ -47,23 +53,33 @@ button_start = Button(text="Start",
                       )
 button_start.grid(column=1, row=1)
 
-# Show text for typing
-label_TextTypeTitle = Label(text="Text you will type", font=("Arial", 10))
-label_TextTypeTitle.grid(column=0, row=2)
-
 # Get word for typing test. This is to get from Wikipedia
 text_to_type = get_wiki("Japan airlines")
 
-#TODO show text with scroll bar
-label_TextType = Label(text=text_to_type, font=("Arial", 20),
-                       # width=40,
-                       justify=LEFT,
-                       wraplength=500,
+# create a frame for canvas------------------------------------------------------#
+frame_canvas = tkinter.Frame(frame_main)
+frame_canvas.grid(row=2, column=0, pady=(5, 0), sticky='nw')
+frame_canvas.grid_rowconfigure(0, weight=1)
+frame_canvas.grid_columnconfigure(0, weight=1)
 
-                       bg="white")
-label_TextType.grid(column=0, row=2)
+# Add a canvas in the frame
+canvas = tkinter.Canvas(frame_canvas, bg="yellow")
+canvas.grid(row=0, column=0, sticky="news")
 
+# Link scrollbar to the Canvas
+vsb=Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
+vsb.grid(column=1, row=0, sticky="ns")
+canvas.configure(yscrollcommand=vsb.set)
 
+# Create a frame to contain the buttons
+frame_buttons = tkinter.Frame(canvas, bg="blue")
+canvas.create_window((0, 0), window=frame_buttons, anchor='nw')
+
+#TODO add text box on Canvas
+text_box = Text(root, font=("arial, 20"), height=10, width=60, )
+text_box.insert(END, text_to_type)
+# v.config(command=text_box.yview)
+text_box.grid(column=3, row=3)
 
 
 
@@ -77,4 +93,4 @@ label_TextType.grid(column=0, row=2)
 
 
 # event roop
-window.mainloop()
+root.mainloop()
