@@ -9,13 +9,23 @@ from functions import get_wiki
 
 # count down function
 def start_countdown():
-    countdown(5)
+    countdown(10)
 
 
 def countdown(count):
     label_time.config(text=count)
     if count > 0:
         root.after(1000, countdown, count - 1)
+
+    if count <=0:
+        textfield.config(state=DISABLED)
+        count_input_word()
+
+def count_input_word():
+    global number_words_written
+    words_written = textfield.get("1.0", tkinter.END)
+    print(words_written)
+    number_words_written = len(words_written)
 
 
 # ----------------------------- UI SETUP ----------------------------------#
@@ -73,6 +83,12 @@ button_start = Button(canvas_1_1, text="Start",
                       )
 button_start.grid(column=1, row=1)
 
+# Show total length of input
+label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input): {len(number_words_written)}', font=("Arial", 20),
+                         fg="blue")
+label_text_chara.grid(column=2, row=1)
+label_text_chara.config(padx=20, pady=20)
+
 # Get word for typing test. This is to get from Wikipedia
 text_to_type = get_wiki("Japan airlines")
 
@@ -100,7 +116,7 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-# TODO set timer and forced to stop type
+
 # TODO count typed words
 # TODO check typed words
 # TODO recored score (Name, date&time, score)
