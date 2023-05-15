@@ -5,12 +5,17 @@ from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 from functions import get_wiki
+import difflib
 
+# Difined variable
+# Screen size
+WIDTH = 640
+HEIGHT = 400 * 2
+TIME = 30
 
 # count down function
 def start_countdown():
-    countdown(10)
-
+    countdown(TIME)
 
 def countdown(count):
     label_time.config(text=count)
@@ -22,17 +27,23 @@ def countdown(count):
         count_input_word()
 
 def count_input_word():
-    global number_words_written
+    global words_written
     words_written = textfield.get("1.0", tkinter.END)
     print(words_written)
     number_words_written = len(words_written)
+    label_text_chara.config(text=f'Score (Total Characters Input):{number_words_written}')
+    check_word(text_to_type, words_written)
+
+def check_word(text_to_type, words_written):
+    diff = difflib.HtmlDiff()
+    res = diff.make_file(text_to_type.split(), words_written.split(),)
+
+    with open('html_diff.html', 'w', encoding='utf-8') as f:
+        f.write(res)
+
 
 
 # ----------------------------- UI SETUP ----------------------------------#
-# fixed variable
-WIDTH = 640
-HEIGHT = 400 * 2
-
 # Set main window --------------------------------------------------------#
 root = Tk()
 root.title("Typing speed challenge")
@@ -84,7 +95,7 @@ button_start = Button(canvas_1_1, text="Start",
 button_start.grid(column=1, row=1)
 
 # Show total length of input
-label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input): {len(number_words_written)}', font=("Arial", 20),
+label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input)', font=("Arial", 20),
                          fg="blue")
 label_text_chara.grid(column=2, row=1)
 label_text_chara.config(padx=20, pady=20)
@@ -116,10 +127,8 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-
-# TODO count typed words
-# TODO check typed words
-# TODO recored score (Name, date&time, score)
+# TODO add reflesh buttom
+# TODO save score (Name, date&time, score)
 
 
 # event roop

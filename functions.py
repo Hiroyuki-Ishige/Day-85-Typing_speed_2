@@ -1,5 +1,6 @@
 import requests
 import wikipediaapi
+import difflib
 
 '''
 # basic format to get API
@@ -22,5 +23,5 @@ def get_wiki(words_serch):
     print(f'page - Summary: {p_wiki.summary}')
     print(f'type: {type(p_wiki.summary)}')
 
-    w_summary = p_wiki.summary
+    w_summary = p_wiki.summary.replace(",", ",\n")
     return w_summary
