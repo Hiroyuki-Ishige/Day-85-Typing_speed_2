@@ -6,25 +6,36 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 from functions import get_wiki
 import difflib
+import webbrowser
 
-# Difined variable
+# Difine fixed variable---------------------------
 # Screen size
 WIDTH = 640
 HEIGHT = 400 * 2
-TIME = 30
+# Set time
+TIME = 15
 
+
+# Function --------------------------------------
 # count down function
+
+# This function is pair with def countdown below.
+# This is necessary to prevent starting countdown before pushing start button or
+# argument error in det start_countdown()
+
 def start_countdown():
     countdown(TIME)
+
 
 def countdown(count):
     label_time.config(text=count)
     if count > 0:
         root.after(1000, countdown, count - 1)
 
-    if count <=0:
+    if count <= 0:
         textfield.config(state=DISABLED)
         count_input_word()
+
 
 def count_input_word():
     global words_written
@@ -34,13 +45,25 @@ def count_input_word():
     label_text_chara.config(text=f'Score (Total Characters Input):{number_words_written}')
     check_word(text_to_type, words_written)
 
+# To check input word by difflib function
 def check_word(text_to_type, words_written):
     diff = difflib.HtmlDiff()
-    res = diff.make_file(text_to_type.split(), words_written.split(),)
+    res = diff.make_file(text_to_type.split(), words_written.split(), )
 
+    # write the res in html file
     with open('html_diff.html', 'w', encoding='utf-8') as f:
         f.write(res)
 
+    # open html in browser
+    url = "html_diff.html"
+    webbrowser.open(url, new=2)
+
+
+# Reset text box for input
+def reset_text_box():
+    textfield.config(state="normal")
+    textfield.delete("1.0", tkinter.END)
+    print(textfield.get("1.0", END))
 
 
 # ----------------------------- UI SETUP ----------------------------------#
@@ -94,10 +117,17 @@ button_start = Button(canvas_1_1, text="Start",
                       )
 button_start.grid(column=1, row=1)
 
+# Buttun to reset text box
+button_reset = Button(canvas_1_1, text="Reset",
+                      font=("Arial", 20),
+                      command=reset_text_box,
+                      )
+button_reset.grid(column=2, row=1)
+
 # Show total length of input
 label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input)', font=("Arial", 20),
                          fg="blue")
-label_text_chara.grid(column=2, row=1)
+label_text_chara.grid(column=3, row=1)
 label_text_chara.config(padx=20, pady=20)
 
 # Get word for typing test. This is to get from Wikipedia
@@ -127,7 +157,6 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-# TODO add reflesh buttom
 # TODO save score (Name, date&time, score)
 
 
