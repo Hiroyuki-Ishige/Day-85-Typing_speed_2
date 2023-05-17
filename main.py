@@ -22,9 +22,17 @@ score_list =[]
 # File path
 file_path = "score_file.txt"
 
-# Function --------------------------------------
-# count down function
+# Global
+global text_to_type
 
+# Function --------------------------------------
+def get_sample_words(): # Get word for typing test. This is to get from Wikipedia
+    word_for_sample = input_sample.get()
+    text_to_type = get_wiki(word_for_sample)
+    text_box.insert("1.0", text_to_type)
+
+
+# count down function
 # This function is pair with def countdown below.
 # This is necessary to prevent starting countdown before pushing start button or
 # argument error in det start_countdown()
@@ -124,9 +132,25 @@ input_name = Entry(canvas_1_1, width=30, font=("Arial", 20))
 input_name.grid(column=1, row=0)
 input_name.insert(tkinter.END, "Your name")
 
+# Input word for sample text
+label_sample = Label(canvas_1_1, text="Fill in text to create sammple text", font=("Arial", 20))
+label_sample.grid(column=0, row=1)
+label_sample.config(padx=20, pady=20)
+
+input_sample = Entry(canvas_1_1, width=30, font=("Arial", 20))
+input_sample.grid(column=1, row=1)
+input_sample.insert(tkinter.END, "fill in text")
+
+# Buttun to get word
+button_get_word = Button(canvas_1_1, text="Get word",
+                      font=("Arial", 20),
+                      command=get_sample_words,
+                      )
+button_get_word.grid(column=2, row=1)
+
 # Show time
 label_time = Label(canvas_1_1, text="Time", font=("Arial", 20))
-label_time.grid(column=0, row=1)
+label_time.grid(column=0, row=2)
 label_time.config(padx=20, pady=20)
 
 # Buttun to start
@@ -134,30 +158,27 @@ button_start = Button(canvas_1_1, text="Start",
                       font=("Arial", 20),
                       command=start_countdown,
                       )
-button_start.grid(column=1, row=1)
+button_start.grid(column=1, row=2)
 
 # Buttun to reset text box
 button_reset = Button(canvas_1_1, text="Reset",
                       font=("Arial", 20),
                       command=reset_text_box,
                       )
-button_reset.grid(column=2, row=1)
+button_reset.grid(column=2, row=2)
 
 # Show total length of input
 label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input)', font=("Arial", 20),
                          fg="blue")
-label_text_chara.grid(column=3, row=1)
+label_text_chara.grid(column=3, row=2)
 label_text_chara.config(padx=20, pady=20)
-
-# Get word for typing test. This is to get from Wikipedia
-text_to_type = get_wiki("Japan airlines")
 
 # add text box on Canvas 1 on frame 2
 text_box = Text(canvas_1_2, font=("arial", 20),
                 height=5,
                 # width=60,
                 )
-text_box.insert("1.0", text_to_type)
+text_box.insert("1.0","sample")
 text_box.grid(column=0, row=0)
 
 # Link scrollbar to Canvas 1 on frame 2
@@ -176,7 +197,7 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-#TODO add function to select sample test
+#TODO check error after time out
 
 
 # event roop
