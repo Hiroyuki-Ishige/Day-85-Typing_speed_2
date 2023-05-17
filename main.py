@@ -7,14 +7,20 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 from functions import get_wiki
 import difflib
 import webbrowser
+from datetime import date, datetime
 
 # Difine fixed variable---------------------------
 # Screen size
 WIDTH = 640
 HEIGHT = 400 * 2
 # Set time
-TIME = 15
+TIME = 10
 
+# Set list---------------------------------------
+score_list =[]
+
+# File path
+file_path = "score_file.txt"
 
 # Function --------------------------------------
 # count down function
@@ -44,6 +50,7 @@ def count_input_word():
     number_words_written = len(words_written)
     label_text_chara.config(text=f'Score (Total Characters Input):{number_words_written}')
     check_word(text_to_type, words_written)
+    save_score(number_words_written)
 
 # To check input word by difflib function
 def check_word(text_to_type, words_written):
@@ -57,6 +64,18 @@ def check_word(text_to_type, words_written):
     # open html in browser
     url = "html_diff.html"
     webbrowser.open(url, new=2)
+
+def save_score(number_words_written):
+    name = input_name.get()
+    score = (number_words_written)
+    now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    score_record = {"name":name, "score":score, "time_stamp":now}
+    score_list.append(score_record)
+    print(score_list)
+    with open(file_path, mode="w") as f:
+        f.write(str(score_list))
+#TODO add function to read, add, clear record
 
 
 # Reset text box for input
@@ -157,7 +176,7 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-# TODO save score (Name, date&time, score)
+#TODO add function to select sample test
 
 
 # event roop
