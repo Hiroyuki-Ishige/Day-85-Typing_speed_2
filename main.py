@@ -22,11 +22,9 @@ score_list =[]
 # File path
 file_path = "score_file.txt"
 
-# Global
-global text_to_type
-
 # Function --------------------------------------
 def get_sample_words(): # Get word for typing test. This is to get from Wikipedia
+    global text_to_type
     word_for_sample = input_sample.get()
     text_to_type = get_wiki(word_for_sample)
     text_box.insert("1.0", text_to_type)
@@ -74,16 +72,22 @@ def check_word(text_to_type, words_written):
     webbrowser.open(url, new=2)
 
 def save_score(number_words_written):
+    global score_list
     name = input_name.get()
     score = (number_words_written)
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     score_record = {"name":name, "score":score, "time_stamp":now}
     score_list.append(score_record)
-    print(score_list)
+
     with open(file_path, mode="w") as f:
         f.write(str(score_list))
-#TODO add function to read, add, clear record
+
+    show_score.config(text=score_list)
+    print(f'Score list{score_list}')
+
+
+#TODO decorate how to show score
 
 
 # Reset text box for input
@@ -110,16 +114,21 @@ canvas_1_1.grid(row=0, column=0, )
 # -----------------------------------------
 
 # create frame_2 --------------------------
-frame_2 = tkinter.Frame(root, bg="skyblue")
+frame_2 = tkinter.Frame(root,
+                        # bg="skyblue"
+                        )
 frame_2.grid(column=0, row=1, sticky='news')
 
-# Set canvas_1 on frame_2
+# Set canvases on frame_2
 canvas_1_2 = tkinter.Canvas(frame_2, )
 canvas_1_2.grid(row=0, column=0, )
 
-# Add a canvas_2 on frame_2
 canvas_2_2 = tkinter.Canvas(frame_2, )
 canvas_2_2.grid(row=1, column=0, )
+
+canvas_3_2 = tkinter.Canvas(frame_2, )
+canvas_3_2.grid(row=2, column=0, )
+
 # ----------------------------------------
 
 # Set parts -----------------------------
@@ -170,8 +179,13 @@ button_reset.grid(column=2, row=2)
 # Show total length of input
 label_text_chara = Label(canvas_1_1, text=f'Score (Total Characters Input)', font=("Arial", 20),
                          fg="blue")
-label_text_chara.grid(column=3, row=2)
+label_text_chara.grid(column=0, row=3)
 label_text_chara.config(padx=20, pady=20)
+
+# Label "Sample text"
+label_sample_text = Label(canvas_1_2, text="Sample text", font=("Arial", 20))
+label_sample_text.grid(column=0, row=0)
+label_sample_text.config(padx=20, pady=20)
 
 # add text box on Canvas 1 on frame 2
 text_box = Text(canvas_1_2, font=("arial", 20),
@@ -179,11 +193,11 @@ text_box = Text(canvas_1_2, font=("arial", 20),
                 # width=60,
                 )
 text_box.insert("1.0","sample")
-text_box.grid(column=0, row=0)
+text_box.grid(column=0, row=1)
 
 # Link scrollbar to Canvas 1 on frame 2
 vsb = Scrollbar(canvas_1_2, orient="vertical", command=canvas_1_2.yview())
-vsb.grid(column=1, row=0, sticky="NS")
+vsb.grid(column=1, row=1, sticky="NS")
 vsb.config(command=text_box.yview)
 text_box.config(yscrollcommand=vsb.set)
 
@@ -197,7 +211,14 @@ textfield = ScrolledText(canvas_2_2, wrap=tkinter.WORD, font=("arial", 20),
                          )
 textfield.grid(column=0, row=1)
 
-#TODO check error after time out
+# Show score on Canvas 3 on frame 2
+# Label "Score"
+label_score = Label(canvas_3_2, text="Score", font=("Arial", 20))
+label_score.grid(column=0, row=0)
+label_score.config(padx=20, pady=20)
+# show score
+show_score = Label(canvas_3_2, text="Score", font=("Arial", 20))
+show_score.grid(column=0, row=1)
 
 
 # event roop
