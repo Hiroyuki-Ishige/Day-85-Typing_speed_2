@@ -17,13 +17,15 @@ HEIGHT = 400 * 2
 TIME = 10
 
 # Set list---------------------------------------
-score_list =[]
+score_list = []
 
 # File path
-file_path = "score_file.txt"
+score_file_path = "score_file.txt"
+score_show_path = "score_show.txt"
+
 
 # Function --------------------------------------
-def get_sample_words(): # Get word for typing test. This is to get from Wikipedia
+def get_sample_words():  # Get word for typing test. This is to get from Wikipedia
     global text_to_type
     word_for_sample = input_sample.get()
     text_to_type = get_wiki(word_for_sample)
@@ -58,6 +60,7 @@ def count_input_word():
     check_word(text_to_type, words_written)
     save_score(number_words_written)
 
+
 # To check input word by difflib function
 def check_word(text_to_type, words_written):
     diff = difflib.HtmlDiff()
@@ -71,24 +74,25 @@ def check_word(text_to_type, words_written):
     url = "html_diff.html"
     webbrowser.open(url, new=2)
 
+
 def save_score(number_words_written):
     global score_list
     name = input_name.get()
     score = (number_words_written)
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    score_record = {"name":name, "score":score, "time_stamp":now}
+    score_record = {"name": name, "score": score, "time_stamp": now}
     score_list.append(score_record)
 
-    with open(file_path, mode="w") as f:
-        f.write(str(score_list))
+    # Write score in the file
+    score_file = open(score_file_path, mode="w")
+    for score in score_list:
+        score_file.write(str(f'Name:{score["name"]}, Score:{score["score"]}, Date&Time:{score["time_stamp"]}\n'))
+    score_file.close()
 
-    show_score.config(text=score_list)
-    print(f'Score list{score_list}')
-
-
-#TODO decorate how to show score
-
+    # Open score file to show score on screen
+    with open(score_file_path, "r") as f:
+        show_score.config(text=f'{f.read()}')
 
 # Reset text box for input
 def reset_text_box():
@@ -152,9 +156,9 @@ input_sample.insert(tkinter.END, "fill in text")
 
 # Buttun to get word
 button_get_word = Button(canvas_1_1, text="Get word",
-                      font=("Arial", 20),
-                      command=get_sample_words,
-                      )
+                         font=("Arial", 20),
+                         command=get_sample_words,
+                         )
 button_get_word.grid(column=2, row=1)
 
 # Show time
@@ -192,7 +196,7 @@ text_box = Text(canvas_1_2, font=("arial", 20),
                 height=5,
                 # width=60,
                 )
-text_box.insert("1.0","sample")
+text_box.insert("1.0", "sample")
 text_box.grid(column=0, row=1)
 
 # Link scrollbar to Canvas 1 on frame 2
@@ -219,7 +223,6 @@ label_score.config(padx=20, pady=20)
 # show score
 show_score = Label(canvas_3_2, text="Score", font=("Arial", 20))
 show_score.grid(column=0, row=1)
-
 
 # event roop
 root.mainloop()
